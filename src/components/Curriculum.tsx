@@ -13,7 +13,63 @@ const Curriculum = () => {
     crhr: number;
     semester: number;
   };
+  type Panel = {
+    semester: number;
+    status: boolean;
+  };
+  const ShowAutoComplete = (semester: number) => {
+    const Values: Panel[] = [];
 
+    AutoCompleteTextPanel.map((SingleAutoCompleteText) => {
+      if (SingleAutoCompleteText.semester === semester) {
+        Values.push({
+          semester: semester,
+          status: true
+        });
+      } else {
+        Values.push({
+          semester: SingleAutoCompleteText.semester,
+          status: false
+        });
+      }
+    });
+    SetAutoCompleteTextPanel(Values);
+    console.log(AutoCompleteTextPanel);
+  };
+  const [AutoCompleteTextPanel, SetAutoCompleteTextPanel] = useState<Panel[]>([
+    {
+      semester: 1,
+      status: false
+    },
+    {
+      semester: 2,
+      status: false
+    },
+    {
+      semester: 3,
+      status: false
+    },
+    {
+      semester: 4,
+      status: false
+    },
+    {
+      semester: 5,
+      status: false
+    },
+    {
+      semester: 6,
+      status: false
+    },
+    {
+      semester: 7,
+      status: false
+    },
+    {
+      semester: 8,
+      status: false
+    }
+  ]);
   const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
   let sems: Semester[] = [
     { sno: 1, name: "1st" },
@@ -72,20 +128,28 @@ const Curriculum = () => {
                 ) : (
                   <tr>
                     <td> </td>
-                    <td style={{ height: "25px" }}>
-                      <AutoCompleteText
-                        items={courses.filter(function (course) {
-                          return (
-                            course.semester == SingleSem.sno &&
-                            !selectedCourses.some(
-                              (selectedCourse) =>
-                                selectedCourse.code === course.code
-                            )
-                          );
-                        })}
-                        SelectedItem={handleSuggestionSelected}
-                      />
+                    <td
+                      style={{ height: "25px" }}
+                      onClick={() => ShowAutoComplete(SingleSem.sno)}
+                    >
+                      {AutoCompleteTextPanel[SingleSem.sno - 1]?.status ? (
+                        <AutoCompleteText
+                          items={courses.filter(function (course) {
+                            return (
+                              course.semester == SingleSem.sno &&
+                              !selectedCourses.some(
+                                (selectedCourse) =>
+                                  selectedCourse.code === course.code
+                              )
+                            );
+                          })}
+                          SelectedItem={handleSuggestionSelected}
+                        />
+                      ) : (
+                        <></>
+                      )}
                     </td>
+
                     <td></td>
                   </tr>
                 )}
